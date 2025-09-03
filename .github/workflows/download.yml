@@ -2,7 +2,10 @@ name: Download Android Commandline Tools
 
 on:
   workflow_dispatch: # می‌تونی دستی اجراش کنی
-
+  
+permissions:
+  contents: write
+  
 jobs:
   download:
     runs-on: ubuntu-latest
@@ -10,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download commandline tools
         run: |
