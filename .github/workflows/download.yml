@@ -28,11 +28,11 @@ jobs:
           rm commandlinetools.zip   # فایل اصلی رو حذف می‌کنیم چون زیر 100MB نیست
           cd ..
           
-- name: Commit and push split files
-  run: |
-    git config user.name "github-actions[bot]"
-    git config user.email "github-actions[bot]@users.noreply.github.com"
-    git add tools/
-    git diff --quiet && echo "No changes to commit" || git commit -m "Update split commandlinetools files"
-    git push --force
-    
+      - name: Commit and push split files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tools/
+          git diff --quiet && echo "No changes to commit" || git commit -m "Update split commandlinetools files"
+          git push --force
+          
