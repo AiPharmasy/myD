@@ -1,13 +1,13 @@
-name: Download Android Commandline Tools
+name: Download and Split Android Commandline Tools
 
 on:
-  workflow_dispatch: # می‌تونی دستی اجراش کنی
-  
+  workflow_dispatch:
+
 permissions:
   contents: write
-  
+
 jobs:
-  download:
+  download_and_split:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,18 +21,22 @@ jobs:
           mkdir -p tools
           curl -L "https://dl.google.com/android/repository/commandlinetools-win-13114758_latest.zip" -o tools/commandlinetools.zip
 
+      - name: Remove old split files
+        run: |
+          rm -f tools/commandlinetools.zip.part-* || true
+
       - name: Split zip file into 50MB chunks
         run: |
           cd tools
           split -b 50M commandlinetools.zip commandlinetools.zip.part-
-          rm commandlinetools.zip   # فایل اصلی رو حذف می‌کنیم چون زیر 100MB نیست
+          rm commandlinetools.zip
           cd ..
-          
+
       - name: Commit and push split files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase
           git add tools/
-          git diff --quiet && echo "No changes to commit" || git commit -m "Update split commandlinetools files"
-          git push --force
-          
+          git commit -m "Update split commandlinetools files"
+          git push
