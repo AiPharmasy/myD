@@ -21,10 +21,18 @@ jobs:
           mkdir -p tools
           curl -L "https://dl.google.com/android/repository/commandlinetools-win-13114758_latest.zip" -o tools/commandlinetools.zip
 
+      - name: Split zip file into 50MB chunks
+        run: |
+          cd tools
+          split -b 50M commandlinetools.zip commandlinetools.zip.part-
+          rm commandlinetools.zip   # فایل اصلی رو حذف می‌کنیم چون زیر 100MB نیست
+          cd ..
+          
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update commandlinetools"
+          git add tools/
+          git commit -m "Update split commandlinetools files"
           git push
+
